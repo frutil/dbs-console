@@ -1,0 +1,4 @@
+{:watch-dirs []
+ :css-dirs ["resources/public/css"]
+ :open-file-command "emacsclient"
+ :open-url false}
