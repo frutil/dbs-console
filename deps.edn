@@ -1,4 +1,7 @@
-{:deps {}
+{:deps {
+        reagent    {:mvn/version "1.0.0-alpha2"}
+
+        arttuka/reagent-material-ui {:mvn/version "4.11.0-1"}}
 
  :paths ["src" "target" "resources"]
 
