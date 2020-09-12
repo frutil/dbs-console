@@ -1,1 +1,2 @@
-{:main frutil.dbs.console.app}
+{:main frutil.dbs.console.app
+ :asset-path "cljs-out/dev"}
