@@ -22,36 +22,36 @@
 (defn CreateDialog [dispose]
   (let [NAMESPACE (r/atom "")
         NAME (r/atom "")]
-    (fn [dispose])
-    [dialog
-     {:open true
-      :on-close dispose}
-     [dialog-title "Create Database"]
-     [dialog-content
-      [text-field
-       {:label "Namespace"
-        :on-change #(->> % .-target .-value (reset! NAMESPACE))
-        :auto-focus true
-        :margin :dense
-        :full-width true}]
-      [text-field
-       {:label "Name"
-        :on-change #(->> % .-target .-value (reset! NAME))
-        :margin :dense
-        :full-width true}]]
-     [dialog-actions
-      [button
-       {:color :primary
-        :on-click dispose}
-       "Cancel"]
-      [button
-       {:color :primary
-        :variant :contained
-        :on-click #(do
-                     (commands/create-database
-                      (keyword @NAMESPACE @NAME))
-                     (dispose))}
-       "Create Database"]]]))
+    (fn [dispose]
+      [dialog
+       {:open true
+        :on-close dispose}
+       [dialog-title "Create Database"]
+       [dialog-content
+        [text-field
+         {:label "Namespace"
+          :on-change #(->> % .-target .-value (reset! NAMESPACE))
+          :auto-focus true
+          :margin :dense
+          :full-width true}]
+        [text-field
+         {:label "Name"
+          :on-change #(->> % .-target .-value (reset! NAME))
+          :margin :dense
+          :full-width true}]]
+       [dialog-actions
+        [button
+         {:color :primary
+          :on-click dispose}
+         "Cancel"]
+        [button
+         {:color :primary
+          :variant :contained
+          :on-click #(do
+                       (commands/create-database
+                        (keyword @NAMESPACE @NAME))
+                       (dispose))}
+         "Create Database"]]])))
 
 
 (defn CreateButton []
