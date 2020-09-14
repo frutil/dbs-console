@@ -2,6 +2,8 @@
   (:require
    ;[reagent.core :as r]
    [reagent.dom :as rdom]
+
+   [reagent-material-ui.core.grid :refer [grid]]
    [reagent-material-ui.core.css-baseline :refer [css-baseline]]
    [reagent-material-ui.styles :as styles]))
 
@@ -30,3 +32,38 @@
 (defn mount-app [custom-theme custom-styles Content]
   (rdom/render (app custom-theme custom-styles Content)
                (js/document.getElementById "app")))
+
+
+;;; layouts
+
+(defn Stack [options & components]
+  (into
+   [grid
+    (assoc options
+           :container true
+           :direction :column
+           :spacing (get options :spacing 1))]
+   (map (fn [component]
+          [grid
+           {:item true}
+           component])
+        components)))
+
+
+(defn Flexbox-with [items component]
+  [:div
+   (into
+    [grid {:container true :spacing 1}]
+    (map (fn [item]
+           [grid {:item true}
+            [component item]])
+         items))])
+
+
+;;; Components
+
+
+(defn Loader [partial-component data]
+  (if data
+    (conj partial-component data)
+    [:div "Loading..."]))

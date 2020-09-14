@@ -1,47 +1,41 @@
 (ns ^:figwheel-hooks frutil.dbs.console.app
   (:require
    [reagent-material-ui.colors :as colors]
+   [reagent-material-ui.core.container :refer [container]]
    [reagent-material-ui.core.button :refer [button]]
    [reagent-material-ui.core.grid :refer [grid]]
    [reagent-material-ui.core.toolbar :refer [toolbar]]
    [reagent-material-ui.icons.add-box :refer [add-box]]
    [reagent-material-ui.icons.clear :refer [clear]]
 
+   [frutil.dbs.console.database :refer [Database]]
+   [frutil.dbs.console.database-query :refer [DatabaseQuery]]
+   [frutil.dbs.console.database-selector :refer [DatabaseSelector]]
+   [frutil.dbs.console.state :as state]
    [frutil.dbs.console.mui :as mui]))
 
 
 (def custom-theme
-  {:palette {:primary   colors/purple
-             :secondary colors/green}})
+  {:palette {:primary {:main (get colors/cyan 800)}
+             :secondary {:main (get colors/pink 600)}}})
 
 
 (defn custom-styles [{:keys [spacing] :as _theme}]
-   {:border (str (spacing 1) "px solid red")
-    "& .XXX" {
-              "& button" {:border "3px solid green"}}})
+  {})
+
+
+(defn DatabaseWrapper [database]
+  [mui/Stack {}
+   [Database]
+   [DatabaseQuery]])
 
 
 (defn Content []
-  [grid
-   {:container true
-    :direction "column"
-    :spacing   2}
-
-   [grid {:item true}
-    [toolbar
-     {:disable-gutters true}
-     [:div.XXX
-      [button
-       {:variant  "contained"
-        :color    "primary"}
-       "Update value property"
-       [add-box]]]
-
-     [button
-      {:variant  "outlined"
-       :color    "secondary"}
-      "Reset"
-      [clear]]]]])
+  [container
+   [:br]
+   [mui/Stack {}
+    [mui/Loader [DatabaseWrapper] (state/database)]
+    [DatabaseSelector]]])
 
 
 (defn mount-app []
