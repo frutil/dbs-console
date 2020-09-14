@@ -1,5 +1,6 @@
 (ns frutil.dbs.console.comm
  (:require
+  [cljs.reader :refer [read-string]]
   [ajax.core :refer [GET POST DELETE PUT]]))
 
 
@@ -33,4 +34,12 @@
        {:params {:q query}
         :handler (fn [response]
                    (js/console.log "QUERY RESPONSE" (type response) response)
+                   (callback response))}))
+
+
+(defn execute-tx [db-ident tx callback]
+  (PUT (database-path db-ident)
+       {:params {:tx tx}
+        :handler (fn [response]
+                   (js/console.log "TX RESPONSE" (type response) response)
                    (callback response))}))

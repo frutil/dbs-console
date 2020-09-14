@@ -11,6 +11,7 @@
    [frutil.dbs.console.dialogs :refer [DialogsContainer]]
    [frutil.dbs.console.database :refer [Database]]
    [frutil.dbs.console.database-query :refer [DatabaseQuery]]
+   [frutil.dbs.console.database-tx :refer [DatabaseTx]]
    [frutil.dbs.console.database-selector :refer [DatabaseSelector]]
    [frutil.dbs.console.state :as state]
    [frutil.dbs.console.mui :as mui]))
@@ -28,7 +29,8 @@
 (defn DatabaseWrapper [database]
   [mui/Stack {}
    [Database]
-   [DatabaseQuery]])
+   [DatabaseQuery]
+   [DatabaseTx]])
 
 
 (defn Content []

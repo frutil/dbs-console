@@ -36,3 +36,10 @@
    query
    (fn [result]
      (state/on-query-result-received result))))
+
+
+(defn execute-tx [tx]
+  (comm/execute-tx
+   (-> (state/database) :ident)
+   tx
+   (fn [])))
