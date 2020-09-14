@@ -5,10 +5,17 @@
 
    [reagent-material-ui.core.grid :refer [grid]]
    [reagent-material-ui.core.css-baseline :refer [css-baseline]]
-   [reagent-material-ui.styles :as styles]))
+   [reagent-material-ui.styles :as styles]
+
+   [reagent-material-ui.core.dialog :refer [dialog]]
+   [reagent-material-ui.core.dialog-title :refer [dialog-title]]
+   [reagent-material-ui.core.dialog-content :refer [dialog-content]]
+   [reagent-material-ui.core.dialog-actions :refer [dialog-actions]]
+   [reagent-material-ui.core.text-field :refer [text-field]]
+   [reagent-material-ui.core.button :refer [button]]))
 
 
-(set! *warn-on-infer* true)
+;(set! *warn-on-infer* true)
 
 
 (defn styled-component [styles component]
@@ -67,3 +74,49 @@
   (if data
     (conj partial-component data)
     [:div "Loading..."]))
+
+
+;;; forms
+
+
+(defn FormDialog
+  [{:keys [dispose
+           title
+           submit-button-text
+           on-submit]}
+   & children]
+  [dialog
+   {:open true
+    :on-close dispose}
+   (when title
+     [dialog-title title])
+   (into
+    [dialog-content]
+    children)
+   [dialog-actions
+    [button
+     {:color :primary
+      :on-click dispose}
+     "Cancel"]
+    [button
+     {:color :primary
+      :variant :contained
+      :on-click #(do
+                   (on-submit)
+                   (dispose))}
+     (or submit-button-text
+         "Submit")]]])
+
+
+(defn DialogTextField
+  [{:keys [id FORM_STATE label auto-focus] :as options}]
+  ;; TODO mandatory id, FORM_STATE
+  [text-field
+   {:name id
+    :label (or label (str id))
+    :margin :dense
+    :full-width true
+    :auto-focus auto-focus
+    :on-change #(swap! FORM_STATE
+                       assoc-in [:fields id :value]
+                       (-> % .-target .-value))}])

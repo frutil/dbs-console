@@ -6,12 +6,6 @@
    [reagent-material-ui.core.card-content :refer [card-content]]
    [reagent-material-ui.core.toolbar :refer [toolbar]]
    [reagent-material-ui.core.button :refer [button]]
-   [reagent-material-ui.core.dialog :refer [dialog]]
-   [reagent-material-ui.core.dialog-title :refer [dialog-title]]
-   [reagent-material-ui.core.dialog-content :refer [dialog-content]]
-   [reagent-material-ui.core.dialog-content-text :refer [dialog-content-text]]
-   [reagent-material-ui.core.dialog-actions :refer [dialog-actions]]
-   [reagent-material-ui.core.text-field :refer [text-field]]
 
    [frutil.dbs.console.mui :as mui]
    [frutil.dbs.console.dialogs :as dialogs]
@@ -19,39 +13,26 @@
    [frutil.dbs.console.commands :as commands]))
 
 
+
+
 (defn CreateDialog [dispose]
-  (let [NAMESPACE (r/atom "")
-        NAME (r/atom "")]
+  (let [FORM_STATE (r/atom {})]
     (fn [dispose]
-      [dialog
-       {:open true
-        :on-close dispose}
-       [dialog-title "Create Database"]
-       [dialog-content
-        [text-field
-         {:label "Namespace"
-          :on-change #(->> % .-target .-value (reset! NAMESPACE))
-          :auto-focus true
-          :margin :dense
-          :full-width true}]
-        [text-field
-         {:label "Name"
-          :on-change #(->> % .-target .-value (reset! NAME))
-          :margin :dense
-          :full-width true}]]
-       [dialog-actions
-        [button
-         {:color :primary
-          :on-click dispose}
-         "Cancel"]
-        [button
-         {:color :primary
-          :variant :contained
-          :on-click #(do
-                       (commands/create-database
-                        (keyword @NAMESPACE @NAME))
-                       (dispose))}
-         "Create Database"]]])))
+      [mui/FormDialog
+       {:dispose dispose
+        :title "Create Database"
+        :submit-button-text "Create Database"
+        :on-submit #(commands/create-database
+                     (keyword (-> @FORM_STATE :fields :namespace :value)
+                              (-> @FORM_STATE :fields :name :value)))}
+       ;[:pre (str @FORM_STATE)]
+       [mui/DialogTextField
+        {:id :namespace
+         :FORM_STATE FORM_STATE
+         :auto-focus true}]
+       [mui/DialogTextField
+        {:id :name
+         :FORM_STATE FORM_STATE}]])))
 
 
 (defn CreateButton []
