@@ -28,3 +28,11 @@
    (fn []
      (reload-databases)
      (state/on-database-selected nil))))
+
+
+(defn execute-query [query]
+  (comm/execute-query
+   (-> (state/database) :ident)
+   query
+   (fn [result]
+     (state/on-query-result-received result))))

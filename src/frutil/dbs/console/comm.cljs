@@ -10,19 +10,27 @@
 (defn load-databases [callback]
   (GET "/api/databases/"
        {:handler (fn [response]
-                   (js/console.log "RESPONSE" (type response) response)
+                   (js/console.log "LIST RESPONSE" (type response) response)
                    (callback response))}))
 
 
 (defn create-database [ident callback]
   (POST (database-path ident)
         {:handler (fn [response]
-                    (js/console.log "RESPONSE" (type response) response)
+                    (js/console.log "CREATE RESPONSE" (type response) response)
                     (callback))}))
 
 
 (defn delete-database [ident callback]
   (DELETE (database-path ident)
         {:handler (fn [response]
-                    (js/console.log "RESPONSE" (type response) response)
+                    (js/console.log "DELETE RESPONSE" (type response) response)
                     (callback))}))
+
+
+(defn execute-query [db-ident query callback]
+  (GET (database-path db-ident)
+       {:params {:q query}
+        :handler (fn [response]
+                   (js/console.log "QUERY RESPONSE" (type response) response)
+                   (callback response))}))

@@ -4,6 +4,8 @@
    [frutil.dbs.console.comm :as comm]))
 
 
+;;; databases list
+
 (defonce DATABASES-LIST (r/atom nil))
 
 
@@ -15,7 +17,7 @@
   (reset! DATABASES-LIST databases))
 
 
-
+;;; database
 
 (defonce DATABASE (r/atom nil))
 
@@ -24,7 +26,20 @@
   @DATABASE)
 
 
+(defn database-ident []
+  (-> (database) :ident))
+
+
 (defn on-database-selected [database]
   (reset! DATABASE database))
 
 
+;;; query
+
+
+(defn query-result []
+  (-> (database) :query-result))
+
+
+(defn on-query-result-received [result]
+  (swap! DATABASE assoc :query-result result))
