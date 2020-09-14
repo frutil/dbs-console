@@ -8,6 +8,7 @@
    [reagent-material-ui.icons.add-box :refer [add-box]]
    [reagent-material-ui.icons.clear :refer [clear]]
 
+   [frutil.dbs.console.dialogs :refer [DialogsContainer]]
    [frutil.dbs.console.database :refer [Database]]
    [frutil.dbs.console.database-query :refer [DatabaseQuery]]
    [frutil.dbs.console.database-selector :refer [DatabaseSelector]]
@@ -35,7 +36,8 @@
    [:br]
    [mui/Stack {}
     [mui/Loader [DatabaseWrapper] (state/database)]
-    [DatabaseSelector]]])
+    [DatabaseSelector]]
+   [DialogsContainer]])
 
 
 (defn mount-app []

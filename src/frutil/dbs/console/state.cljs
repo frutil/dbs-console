@@ -15,8 +15,6 @@
   (reset! DATABASES-LIST databases))
 
 
-(defn reload-databases []
-  (comm/load-databases on-database-list-received))
 
 
 (defonce DATABASE (r/atom nil))
@@ -25,10 +23,8 @@
 (defn database []
   @DATABASE)
 
-(defn on-database-received [database]
+
+(defn on-database-selected [database]
   (reset! DATABASE database))
 
 
-(defn load-database [database]
-  (on-database-received
-   database))

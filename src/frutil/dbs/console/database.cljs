@@ -7,7 +7,8 @@
    [reagent-material-ui.core.button :refer [button]]
 
    [frutil.dbs.console.mui :as mui]
-   [frutil.dbs.console.state :as state]))
+   [frutil.dbs.console.state :as state]
+   [frutil.dbs.console.commands :as commands]))
 
 
 (defn ActionButton [{:keys [text on-click]}]
@@ -30,6 +31,7 @@
         [ActionButton
          {:text "Transact"}]
         [ActionButton
-         {:text "Delete"}]]
+         {:text "Delete"
+          :on-click #(commands/delete-database (-> database :ident))}]]
        [:pre
         (str database)]]]]))
