@@ -43,3 +43,14 @@
 
 (defn on-query-result-received [result]
   (swap! DATABASE assoc :query-result result))
+
+
+;;; schema
+
+
+(defn schema []
+  (-> (database) :schema))
+
+
+(defn on-schema-received [result]
+  (swap! DATABASE assoc :schema result))

@@ -1,12 +1,22 @@
 (ns frutil.dbs.console.mui
   (:require
-   ;[reagent.core :as r]
+   [reagent.core :as r]
    [reagent.dom :as rdom]
 
    [reagent-material-ui.core.grid :refer [grid]]
    [reagent-material-ui.core.css-baseline :refer [css-baseline]]
    [reagent-material-ui.styles :as styles]
 
+   [reagent-material-ui.core.table-container :refer [table-container]]
+   [reagent-material-ui.core.table :refer [table]]
+   [reagent-material-ui.core.table-head :refer [table-head]]
+   [reagent-material-ui.core.table-body :refer [table-body]]
+   [reagent-material-ui.core.table-row :refer [table-row]]
+   [reagent-material-ui.core.table-cell :refer [table-cell]]
+
+   [reagent-material-ui.core.paper :refer [paper]]
+   [reagent-material-ui.core.card :refer [card]]
+   [reagent-material-ui.core.card-content :refer [card-content]]
    [reagent-material-ui.core.dialog :refer [dialog]]
    [reagent-material-ui.core.dialog-title :refer [dialog-title]]
    [reagent-material-ui.core.dialog-content :refer [dialog-content]]
@@ -74,6 +84,43 @@
   (if data
     (conj partial-component data)
     [:div "Loading..."]))
+
+
+(defn Card [& children]
+  [card
+   [card-content
+    (into
+     [grid {:container true :direction :column :spacing 1}]
+     (map (fn [child]
+            [grid {:item true}
+             child])
+          children))]])
+
+
+;;; table
+
+
+(defn RecordsTable [{:keys [records columns]}]
+  [paper
+   [table-container
+    [table
+     {:size :small}
+     [table-head
+      [table-row
+       (for [column columns]
+         ^{:key (-> column :id)}
+         [table-cell
+          [:span.b
+           (or (-> column :head)
+               (-> column :id str))]])]]
+     [table-body
+      (for [record records]
+        ^{:key (-> record :id)}
+        [table-row
+         {:hover true}
+         (for [column columns]
+           ^{:key (-> column :id)}
+           [table-cell ((-> column :value) record)])])]]]])
 
 
 ;;; forms

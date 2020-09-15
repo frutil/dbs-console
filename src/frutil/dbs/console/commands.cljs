@@ -9,9 +9,12 @@
 
 
 (defn select-database [database]
-  ;; FIXME
-  (state/on-database-selected
-   database))
+  (state/on-database-selected database)
+  (comm/load-entities
+   (-> (state/database) :ident)
+   '[[?e :db/ident _]]
+   (fn [result]
+     (state/on-schema-received result))))
 
 
 (defn create-database [db-ident]

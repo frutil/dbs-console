@@ -13,6 +13,7 @@
    [frutil.dbs.console.database-query :refer [DatabaseQuery]]
    [frutil.dbs.console.database-tx :refer [DatabaseTx]]
    [frutil.dbs.console.database-selector :refer [DatabaseSelector]]
+   [frutil.dbs.console.schema :refer [Schema]]
    [frutil.dbs.console.state :as state]
    [frutil.dbs.console.mui :as mui]))
 
@@ -23,12 +24,13 @@
 
 
 (defn custom-styles [{:keys [spacing] :as _theme}]
-  {})
+  {"& .b" {:font-weight :bold :letter-spacing "1px"}})
 
 
 (defn DatabaseWrapper [database]
   [mui/Stack {}
    [Database]
+   [Schema]
    [DatabaseQuery]
    [DatabaseTx]])
 

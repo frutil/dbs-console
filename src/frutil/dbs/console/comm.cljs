@@ -37,6 +37,14 @@
                    (callback response))}))
 
 
+(defn load-entities [db-ident wheres callback]
+  (GET (str (database-path db-ident) "/entities")
+       {:params {:wheres (pr-str wheres)}
+        :handler (fn [response]
+                   (js/console.log "ENTITIES RESPONSE" (type response) response)
+                   (callback response))}))
+
+
 (defn execute-tx [db-ident tx callback]
   (PUT (database-path db-ident)
        {:params {:tx tx}

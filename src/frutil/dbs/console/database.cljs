@@ -32,6 +32,6 @@
          {:text "Transact"}]
         [ActionButton
          {:text "Delete"
-          :on-click #(commands/delete-database (-> database :ident))}]]
-       [:pre
-        (str database)]]]]))
+          :on-click #(commands/delete-database (-> database :ident))}]]]]]))
+       ;; [:pre
+       ;;  (str database)]]]]))
