@@ -14,6 +14,7 @@
    [reagent-material-ui.core.table-row :refer [table-row]]
    [reagent-material-ui.core.table-cell :refer [table-cell]]
 
+   [reagent-material-ui.core.drawer :refer [drawer]]
    [reagent-material-ui.core.paper :refer [paper]]
    [reagent-material-ui.core.card :refer [card]]
    [reagent-material-ui.core.card-content :refer [card-content]]
@@ -22,8 +23,10 @@
    [reagent-material-ui.core.dialog-content :refer [dialog-content]]
    [reagent-material-ui.core.dialog-actions :refer [dialog-actions]]
    [reagent-material-ui.core.text-field :refer [text-field]]
-   [reagent-material-ui.core.button :refer [button]]))
+   [reagent-material-ui.core.button :refer [button]]
+   [reagent-material-ui.core.icon-button :refer [icon-button]]
 
+   [reagent-material-ui.icons.menu :refer [menu]]))
 
 ;(set! *warn-on-infer* true)
 
@@ -167,3 +170,48 @@
     :on-change #(swap! FORM_STATE
                        assoc-in [:fields id :value]
                        (-> % .-target .-value))}])
+
+
+;;; dialogs
+
+
+(defonce ACTIVE_DIALOG (r/atom nil))
+
+
+(defn DialogsContainer []
+  [:div.DialogsContainer
+   (when-let [dialog @ACTIVE_DIALOG]
+     (conj dialog
+           #(reset! ACTIVE_DIALOG nil)))])
+
+
+(defn show-dialog [dialog]
+  (reset! ACTIVE_DIALOG dialog))
+
+
+;;; drawers
+
+(defonce LEFT_DRAWER (r/atom nil))
+
+
+(defn hide-left-drawer []
+  (reset! LEFT_DRAWER false))
+
+
+(defn LeftDrawer [& children]
+  [drawer
+   {:open (-> @LEFT_DRAWER boolean)
+    :anchor :left
+    :on-close hide-left-drawer}
+   (into
+    [:div
+     {:on-click hide-left-drawer}]
+    children)])
+
+
+(defn LeftDrawerToggleIconButton []
+  [icon-button
+   {:color :inherit
+    :edge :start
+    :on-click #(reset! LEFT_DRAWER true)}
+   [menu]])

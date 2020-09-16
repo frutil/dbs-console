@@ -1,58 +1,53 @@
 (ns ^:figwheel-hooks frutil.dbs.console.app
   (:require
    [reagent-material-ui.colors :as colors]
-   [reagent-material-ui.core.container :refer [container]]
-   [reagent-material-ui.core.button :refer [button]]
-   [reagent-material-ui.core.grid :refer [grid]]
-   [reagent-material-ui.core.toolbar :refer [toolbar]]
-   [reagent-material-ui.icons.add-box :refer [add-box]]
-   [reagent-material-ui.icons.clear :refer [clear]]
 
-   [frutil.dbs.console.dialogs :refer [DialogsContainer]]
-   [frutil.dbs.console.database :refer [Database]]
-   [frutil.dbs.console.database-query :refer [DatabaseQuery]]
-   [frutil.dbs.console.database-tx :refer [DatabaseTx]]
-   [frutil.dbs.console.database-selector :refer [DatabaseSelector]]
-   [frutil.dbs.console.schema :refer [Schema]]
+   [frutil.dbs.console.desktop :as desktop]
+   [frutil.dbs.console.database-selector :as database-selector]
+   [frutil.dbs.console.database :as database]
+   [frutil.dbs.console.schema :as schema]
+   [frutil.dbs.console.query :as query]
+   [frutil.dbs.console.transact :as transact]
+
+   [frutil.dbs.console.navigation :as navigation]
    [frutil.dbs.console.state :as state]
    [frutil.dbs.console.mui :as mui]))
 
 
-(def custom-theme
+(def theme
   {:palette {:primary {:main (get colors/cyan 800)}
              :secondary {:main (get colors/pink 600)}}})
 
 
-(defn custom-styles [{:keys [spacing] :as _theme}]
-  {"& .b" {:font-weight :bold :letter-spacing "1px"}})
+(defn styles [{:keys [spacing] :as theme}]
+  (js/console.log "THEME" (-> theme :mixins))
+  {"& .toolbar" (-> theme :mixins :toolbar)
+   "& .b" {:font-weight :bold :letter-spacing "1px"}})
 
 
-(defn DatabaseWrapper [database]
-  [mui/Stack {}
-   [Database]
-   [Schema]
-   [DatabaseQuery]
-   [DatabaseTx]])
+(def routes
+  [(-> (database-selector/model) :route)
+   (-> (database/model) :route)
+   (-> (schema/model) :route)
+   (-> (query/model) :route)
+   (-> (transact/model) :route)])
 
-
-(defn Content []
-  [container
-   [:br]
-   [mui/Stack {}
-    [mui/Loader [DatabaseWrapper] (state/database)]
-    [DatabaseSelector]]
-   [DialogsContainer]])
 
 
 (defn mount-app []
-  (mui/mount-app custom-theme custom-styles Content))
+  (mui/mount-app theme styles #'desktop/Desktop))
 
 
-(defonce app-mounted
+(defn initialize []
+  (navigation/initialize! routes)
+  (mount-app))
+
+
+(defonce initialized
   (do
-    (mount-app)
+    (initialize)
     true))
 
 
 (defn ^:after-load dev-after-load []
-  (mount-app))
+  (initialize))

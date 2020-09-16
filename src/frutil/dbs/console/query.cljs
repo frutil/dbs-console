@@ -1,4 +1,4 @@
-(ns frutil.dbs.console.database-query
+(ns frutil.dbs.console.query
   (:require
    [reagent.core :as r]
 
@@ -34,7 +34,10 @@
                         (commands/execute-query @QUERY))}])))
 
 
-(defn DatabaseQuery []
+(defn View [route-match]
+  (let [db-namespace (-> route-match :parameters :path :namespace)
+        db-name      (-> route-match :parameters :path :name)
+        db-ident (keyword db-namespace db-name)])
   (let [database (state/database)]
     [card
      [card-content
@@ -43,3 +46,11 @@
        [Input]
        [:pre
         (str (state/query-result))]]]]))
+
+
+(defn model []
+  {:route ["/database/:namespace/:name/query"
+           {:name :query
+            :view #'View
+            :parameters {:path {:namespace string?
+                                :name string?}}}]})

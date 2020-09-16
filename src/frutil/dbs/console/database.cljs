@@ -18,20 +18,29 @@
    text])
 
 
-(defn Database []
-  (let [database (state/database)]
+(defn View [route-match]
+  (let [db-namespace (-> route-match :parameters :path :namespace)
+        db-name      (-> route-match :parameters :path :name)
+        db-ident (keyword db-namespace db-name)]
     [card
      [card-content
       [mui/Stack {}
+       [:pre (-> route-match :parameters str)]
        [toolbar
         {:spacing 1}
-        [:div (-> database :ident str)]
+        [:div (str db-ident)]
         [ActionButton
          {:text "Query"}]
         [ActionButton
          {:text "Transact"}]
         [ActionButton
          {:text "Delete"
-          :on-click #(commands/delete-database (-> database :ident))}]]]]]))
-       ;; [:pre
-       ;;  (str database)]]]]))
+          :on-click #(commands/delete-database db-ident)}]]]]]))
+
+
+(defn model []
+  {:route ["/database/:namespace/:name/"
+           {:name :database
+            :view #'View
+            :parameters {:path {:namespace string?
+                                :name string?}}}]})

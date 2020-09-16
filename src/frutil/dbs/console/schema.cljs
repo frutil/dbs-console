@@ -8,7 +8,10 @@
   (when k (name k)))
 
 
-(defn Schema []
+(defn View [route-match]
+  (let [db-namespace (-> route-match :parameters :path :namespace)
+        db-name      (-> route-match :parameters :path :name)
+        db-ident (keyword db-namespace db-name)])
   (let [schema (state/schema)]
     [:div
      "schema"
@@ -24,3 +27,11 @@
                   :value #(-> % :db/cardinality keyword-name)}
                  {:id :db/unique
                   :value #(-> % :db/unique keyword-name)}]}]]))
+
+
+(defn model []
+  {:route ["/database/:namespace/:name/schema"
+           {:name :schema
+            :view #'View
+            :parameters {:path {:namespace string?
+                                :name string?}}}]})

@@ -1,4 +1,4 @@
-(ns frutil.dbs.console.database-tx
+(ns frutil.dbs.console.transact
   (:require
    [reagent.core :as r]
 
@@ -33,10 +33,21 @@
                         (commands/execute-tx @TX))}])))
 
 
-(defn DatabaseTx []
+(defn View [route-match]
+  (let [db-namespace (-> route-match :parameters :path :namespace)
+        db-name      (-> route-match :parameters :path :name)
+        db-ident (keyword db-namespace db-name)])
   (let [database (state/database)]
     [card
      [card-content
       [mui/Stack {}
        [:div "TX"]
        [Input]]]]))
+
+
+(defn model []
+  {:route ["/database/:namespace/:name/transact"
+           {:name :transact
+            :view #'View
+            :parameters {:path {:namespace string?
+                                :name string?}}}]})

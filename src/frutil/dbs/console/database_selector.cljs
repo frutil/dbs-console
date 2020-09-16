@@ -2,13 +2,15 @@
   (:require
    [reagent.core :as r]
 
+   [reitit.frontend.easy :as rfe]
+
    [reagent-material-ui.core.card :refer [card]]
    [reagent-material-ui.core.card-content :refer [card-content]]
    [reagent-material-ui.core.toolbar :refer [toolbar]]
    [reagent-material-ui.core.button :refer [button]]
 
+   [frutil.dbs.console.navigation :as navigation]
    [frutil.dbs.console.mui :as mui]
-   [frutil.dbs.console.dialogs :as dialogs]
    [frutil.dbs.console.state :as state]
    [frutil.dbs.console.commands :as commands]))
 
@@ -38,8 +40,9 @@
 (defn CreateButton []
   [button
    {:color :secondary
-    :on-click #(dialogs/show-dialog [CreateDialog])}
+    :on-click #(mui/show-dialog [CreateDialog])}
    "create..."])
+
 
 
 (defn ReloadButton []
@@ -56,6 +59,9 @@
    {:key (-> database :ident)
     :color :primary
     :variant :contained
+    :href (navigation/href :database
+                           {:namespace (-> database :namespace)
+                            :name (-> database :name)})
     :on-click #(commands/select-database database)}
    (-> database :ident str)])
 
@@ -64,14 +70,20 @@
   [mui/Flexbox-with databases DatabaseButton])
 
 
-(defn DatabaseSelector []
+(defn View []
   (let [databases (state/databases-list)]
     [card
      [card-content
       [mui/Stack {}
        [:div
         "Databases"]
+       [:pre (str databases)]
        [toolbar
         [ReloadButton]
         [CreateButton]]]
       [mui/Loader [DatabaseButtons] databases]]]))
+
+
+(defn model []
+  {:route [["/" {:name :database-selector
+                 :view #'View}]]})
