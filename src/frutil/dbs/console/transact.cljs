@@ -35,10 +35,11 @@
       [text-field
        {:label "Transaction"
         :default-value default-tx
+        :variant :outlined
         :multiline true
-        :rows 3
+        :rows-max 10
         :full-width true
-        :font-family :monospace
+        :class :monospace
         :on-change #(reset! TX (-> % .-target .-value))
         :on-key-down #(when (and
                              (-> % .-ctrlKey)
@@ -53,7 +54,6 @@
     [card
      [card-content
       [mui/Stack {}
-       [:div "TX"]
        [Input db-ident]
        [mui/Data (tx-result db-ident)]]]]))
 

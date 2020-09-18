@@ -21,7 +21,8 @@
 (defn styles [{:keys [spacing] :as theme}]
   (js/console.log "THEME" (-> theme :mixins))
   {"& .toolbar" (-> theme :mixins :toolbar)
-   "& .b" {:font-weight :bold :letter-spacing "1px"}})
+   "& .b" {:font-weight :bold :letter-spacing "1px"}
+   "& .monospace textarea" {:font-family :monospace}})
 
 
 (def routes

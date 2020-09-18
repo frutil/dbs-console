@@ -37,10 +37,11 @@
       [text-field
        {:label "Query"
         :default-value default-query
+        :variant :outlined
         :multiline true
-        :rows 3
+        :rows-max 10
         :full-width true
-        :font-family :monospace
+        :class :monospace
         :on-change #(reset! QUERY (-> % .-target .-value))
         :on-key-down #(when (and
                              (-> % .-ctrlKey)
