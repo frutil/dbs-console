@@ -1,2 +1,3 @@
 {:main frutil.dbs.console.app
- :asset-path "cljs-out/dev"}
+ :asset-path "cljs-out/dev"
+ :preloads [frutil.spa.devtools.initialize]}

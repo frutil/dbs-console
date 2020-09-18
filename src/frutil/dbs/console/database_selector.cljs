@@ -9,12 +9,19 @@
    [reagent-material-ui.core.toolbar :refer [toolbar]]
    [reagent-material-ui.core.button :refer [button]]
 
+   [frutil.spa.state :as state]
+
    [frutil.dbs.console.navigation :as navigation]
    [frutil.dbs.console.mui :as mui]
-   [frutil.dbs.console.state :as state]
-   [frutil.dbs.console.commands :as commands]))
+   [frutil.dbs.console.commands :as commands]
+   [frutil.dbs.console.comm :as comm]))
 
 
+(state/def-state databases
+  {:request-f (fn [shelve item-id etag callback]
+                (comm/load-databases
+                 (fn [databases]
+                   (callback databases nil))))})
 
 
 (defn CreateDialog [dispose]
@@ -71,13 +78,12 @@
 
 
 (defn View []
-  (let [databases (state/databases-list)]
+  (let [databases (databases)]
     [card
      [card-content
       [mui/Stack {}
        [:div
         "Databases"]
-       [:pre (str databases)]
        [toolbar
         [ReloadButton]
         [CreateButton]]]

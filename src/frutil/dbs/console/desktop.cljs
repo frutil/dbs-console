@@ -12,6 +12,7 @@
    [reagent-material-ui.core.list-item-text :refer [list-item-text]]
    [reagent-material-ui.core.divider :refer [divider]]
 
+   [frutil.spa.devtools.core :as devtools]
    [frutil.dbs.console.mui :as mui]
    [frutil.dbs.console.navigation :as navigation]))
 
@@ -67,4 +68,5 @@
       [:div.toolbar]
       [:br]
       [:main
-       [navigation/Switcher :view]]]]))
+       [navigation/Switcher :view]]]
+     [devtools/Console]]))
