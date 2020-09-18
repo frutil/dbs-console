@@ -2,8 +2,6 @@
   (:require
    [reagent.core :as r]
 
-   [reitit.frontend.easy :as rfe]
-
    [reagent-material-ui.core.card :refer [card]]
    [reagent-material-ui.core.card-content :refer [card-content]]
    [reagent-material-ui.core.toolbar :refer [toolbar]]
@@ -13,7 +11,6 @@
 
    [frutil.dbs.console.navigation :as navigation]
    [frutil.dbs.console.mui :as mui]
-   [frutil.dbs.console.commands :as commands]
    [frutil.dbs.console.comm :as comm]))
 
 
@@ -24,6 +21,19 @@
                    (callback databases nil))))})
 
 
+(defn reset-databases []
+  (state/clear-all! databases))
+
+
+(defn create-database [db-namespace db-name]
+  (comm/create-database
+   (keyword db-namespace db-name)
+   (fn []
+     (reset-databases)
+     (navigation/push-state :database {:namespace db-namespace
+                                       :name db-name}))))
+
+
 (defn CreateDialog [dispose]
   (let [FORM_STATE (r/atom {})]
     (fn [dispose]
@@ -31,9 +41,9 @@
        {:dispose dispose
         :title "Create Database"
         :submit-button-text "Create Database"
-        :on-submit #(commands/create-database
-                     (keyword (-> @FORM_STATE :fields :namespace :value)
-                              (-> @FORM_STATE :fields :name :value)))}
+        :on-submit #(create-database
+                      (-> @FORM_STATE :fields :namespace :value)
+                      (-> @FORM_STATE :fields :name :value))}
        ;[:pre (str @FORM_STATE)]
        [mui/DialogTextField
         {:id :namespace
@@ -52,11 +62,7 @@
 
 
 
-(defn ReloadButton []
-  [button
-   {:color :secondary
-    :on-click #(commands/reload-databases)}
-   "reload"])
+
 
 
 
@@ -68,8 +74,7 @@
     :variant :contained
     :href (navigation/href :database
                            {:namespace (-> database :namespace)
-                            :name (-> database :name)})
-    :on-click #(commands/select-database database)}
+                            :name (-> database :name)})}
    (-> database :ident str)])
 
 
@@ -85,7 +90,6 @@
        [:div
         "Databases"]
        [toolbar
-        [ReloadButton]
         [CreateButton]]]
       [mui/Loader [DatabaseButtons] databases]]]))
 

@@ -1,7 +1,18 @@
 (ns frutil.dbs.console.schema
   (:require
-   [frutil.dbs.console.state :as state]
+   [frutil.spa.state :as state]
+
+   [frutil.dbs.console.comm :as comm]
    [frutil.dbs.console.mui :as mui]))
+
+
+(state/def-state schema
+  {:request-f (fn [shelve item-id etag callback]
+                (comm/load-entities
+                 item-id
+                 '[[?e :db/ident _]]
+                 (fn [result]
+                   (callback result nil))))})
 
 
 (defn keyword-name [k]
@@ -11,8 +22,8 @@
 (defn View [route-match]
   (let [db-namespace (-> route-match :parameters :path :namespace)
         db-name      (-> route-match :parameters :path :name)
-        db-ident (keyword db-namespace db-name)])
-  (let [schema (state/schema)]
+        db-ident (keyword db-namespace db-name)
+        schema (schema db-ident)]
     [:div
      "schema"
      [mui/RecordsTable

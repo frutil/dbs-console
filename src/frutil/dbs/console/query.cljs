@@ -8,16 +8,30 @@
    [reagent-material-ui.core.text-field :refer [text-field]]
    [reagent-material-ui.core.button :refer [button]]
 
+   [frutil.spa.state :as state]
+
    [frutil.dbs.console.mui :as mui]
-   [frutil.dbs.console.commands :as commands]
-   [frutil.dbs.console.state :as state]))
+
+   [frutil.dbs.console.comm :as comm]))
+
+
+(state/def-state query-result {})
+
+
+(defn execute-query [db-ident query]
+  (comm/execute-query
+   db-ident
+   query
+   (fn [result]
+     (state/set! query-result db-ident result nil))))
+
 
 (def default-query "[:find ?e
  :where
  [?e :db.user/id]]")
 
 
-(defn Input []
+(defn Input [db-ident]
   (let [QUERY (r/atom default-query)]
     (fn []
       [text-field
@@ -31,21 +45,18 @@
         :on-key-down #(when (and
                              (-> % .-ctrlKey)
                              (= (-> % .-keyCode) 13))
-                        (commands/execute-query @QUERY))}])))
+                        (execute-query db-ident @QUERY))}])))
 
 
 (defn View [route-match]
   (let [db-namespace (-> route-match :parameters :path :namespace)
         db-name      (-> route-match :parameters :path :name)
-        db-ident (keyword db-namespace db-name)])
-  (let [database (state/database)]
+        db-ident (keyword db-namespace db-name)]
     [card
      [card-content
       [mui/Stack {}
-       [:div "Query"]
-       [Input]
-       [:pre
-        (str (state/query-result))]]]]))
+       [Input db-ident]
+       [mui/Data (query-result db-ident)]]]]))
 
 
 (defn model []

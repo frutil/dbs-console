@@ -7,8 +7,18 @@
    [reagent-material-ui.core.button :refer [button]]
 
    [frutil.dbs.console.mui :as mui]
-   [frutil.dbs.console.state :as state]
-   [frutil.dbs.console.commands :as commands]))
+
+   [frutil.dbs.console.navigation :as navigation]
+   [frutil.dbs.console.comm :as comm]
+   [frutil.dbs.console.database-selector :as database-selector]))
+
+
+(defn delete-database [db-ident]
+  (comm/delete-database
+   db-ident
+   (fn []
+     (database-selector/reset-databases)
+     (navigation/push-state :database-selector {}))))
 
 
 (defn ActionButton [{:keys [text on-click]}]
@@ -25,17 +35,11 @@
     [card
      [card-content
       [mui/Stack {}
-       [:pre (-> route-match :parameters str)]
        [toolbar
         {:spacing 1}
-        [:div (str db-ident)]
-        [ActionButton
-         {:text "Query"}]
-        [ActionButton
-         {:text "Transact"}]
         [ActionButton
          {:text "Delete"
-          :on-click #(commands/delete-database db-ident)}]]]]]))
+          :on-click #(delete-database db-ident)}]]]]]))
 
 
 (defn model []

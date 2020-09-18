@@ -1,6 +1,5 @@
 (ns frutil.dbs.console.comm
  (:require
-  [cljs.reader :refer [read-string]]
   [ajax.core :refer [GET POST DELETE PUT]]))
 
 
